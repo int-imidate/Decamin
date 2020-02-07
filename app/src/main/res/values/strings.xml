@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Decamin</string>
+    <string name="title_activity_book_ride">Map</string>
+    <string name="enter_pickup_location">Enter pickup location</string>
 </resources>
