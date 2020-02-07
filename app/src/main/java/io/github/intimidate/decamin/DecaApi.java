@@ -8,11 +8,11 @@ import retrofit2.http.POST;
 
 public interface DecaApi {
 
-    String base_url="https://aaveg.in/api/";
+    String base_url="http://10.1.96.113:3000/";
 
     @FormUrlEncoded
     @POST("login")
-    Call<LoginBody> loginUser(
+    Call<Boolean> loginUser(
             @Field("email") String email,
             @Field("password") String password
 

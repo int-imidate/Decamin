@@ -3,13 +3,22 @@ package io.github.intimidate.decamin.remote;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginBody {
-    @SerializedName("password")
-    String password;
     @SerializedName("email")
     String email;
+    @SerializedName("password")
+    String password;
+    @SerializedName("gender")
+    String gender;
+    @SerializedName("due")
+    int due;
+    @SerializedName("name")
+    String name;
 
-    public LoginBody(String password, String email) {
-        this.password = password;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -21,11 +30,35 @@ public class LoginBody {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getGender() {
+        return gender;
     }
 
-    public void setEmail(String email) {
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public int getDue() {
+        return due;
+    }
+
+    public void setDue(int due) {
+        this.due = due;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LoginBody(String email, String password, String gender, int due, String name) {
         this.email = email;
+        this.password = password;
+        this.gender = gender;
+        this.due = due;
+        this.name = name;
     }
 }

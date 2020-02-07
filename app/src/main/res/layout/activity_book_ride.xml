@@ -5,12 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".BookRideActivity" />
+        tools:context=".BookRideActivity"
+        tools:layout_editor_absoluteX="64dp"
+        tools:layout_editor_absoluteY="229dp" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -52,6 +55,10 @@
         map:layout_constraintLeft_toLeftOf="parent"
         map:layout_constraintRight_toRightOf="parent"
         map:layout_constraintTop_toTopOf="parent" />
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="click me"
+        android:id="@+id/click"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
