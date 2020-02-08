@@ -1,28 +1,26 @@
 package io.github.intimidate.decamin.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import io.github.intimidate.decamin.BookRideActivity;
 import io.github.intimidate.decamin.R;
-import io.github.intimidate.decamin.DecaApi;
+import io.github.intimidate.decamin.remote.ApiManager;
 import io.github.intimidate.decamin.remote.LoginBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity implements Login {
 
@@ -33,6 +31,11 @@ public class LoginActivity extends AppCompatActivity implements Login {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int token = PreferenceManager.getDefaultSharedPreferences(this).getInt("token", -1);
+        if (token != -1) {
+            startActivity(new Intent(LoginActivity.this, BookRideActivity.class));
+            finish();
+        }
         setContentView(R.layout.activity_login);
         loginAnim = findViewById(R.id.loginAnim);
         login = findViewById(R.id.login);
@@ -45,15 +48,8 @@ public class LoginActivity extends AppCompatActivity implements Login {
 
     @Override
     public void doLogin(String email, String password) {
-        DecaApi api;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(DecaApi.base_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        api = retrofit.create(DecaApi.class);
-
-        Call<LoginBody> call = api.loginUser(email, password);
+        Call<LoginBody> call = ApiManager.api.loginUser(email, password);
         call.enqueue(new Callback<LoginBody>() {
             @Override
             public void onResponse(Call<LoginBody> call, Response<LoginBody> response) {
@@ -61,6 +57,13 @@ public class LoginActivity extends AppCompatActivity implements Login {
                 login.setVisibility(View.GONE);
                 loginAnim.setVisibility(View.VISIBLE);
                 loginAnim.playAnimation();
+                if (response.body() != null) {
+                    PreferenceManager
+                            .getDefaultSharedPreferences(LoginActivity.this)
+                            .edit()
+                            .putInt("token", response.body().getToken())
+                            .apply();
+                }
                 new Handler().postDelayed(() -> {
                     startActivity(new Intent(LoginActivity.this, BookRideActivity.class));
                     finish();
