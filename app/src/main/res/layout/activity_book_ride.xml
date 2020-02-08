@@ -18,11 +18,11 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        map:cardBackgroundColor="@color/whiteTranslucent"
-        map:cardCornerRadius="10dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginRight="7dp"
+        map:cardBackgroundColor="@color/quantum_white_100"
+        map:cardCornerRadius="6dp"
         map:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -30,14 +30,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="-10dp"
-                android:text="@string/enter_pickup_location"
-                android:textColor="@color/colorPrimaryDark" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:layout_marginBottom="-10dp"-->
+<!--                android:text="@string/enter_pickup_location"-->
+<!--                android:textColor="@color/colorPrimaryDark" />-->
 
             <fragment
                 android:id="@+id/autocomplete_fragment"
