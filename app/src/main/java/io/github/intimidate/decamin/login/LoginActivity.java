@@ -68,17 +68,10 @@ public class LoginActivity extends AppCompatActivity implements Login {
                             .getDefaultSharedPreferences(LoginActivity.this)
                             .edit()
                             .putInt("token", response.body().getToken())
+                            .putString("email",response.body().getEmail())
+                            .putString("name",response.body().getName())
                             .apply();
-                    PreferenceManager
-                            .getDefaultSharedPreferences(LoginActivity.this)
-                            .edit()
-                            .putString("email", response.body().getEmail())
-                            .apply();
-                    PreferenceManager
-                            .getDefaultSharedPreferences(LoginActivity.this)
-                            .edit()
-                            .putString("name", response.body().getName())
-                            .apply();
+
                     User.email=response.body().getEmail();
                     User.name=response.body().getName();
                 }

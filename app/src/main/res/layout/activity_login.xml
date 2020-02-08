@@ -68,7 +68,8 @@
         android:visibility="invisible"
         app:lottie_scale="0.5" />
 
-<!--    <TextView-->
+
+    <!--    <TextView-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:text="Hello"-->

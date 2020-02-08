@@ -38,6 +38,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ import java.util.Objects;
 
 import io.github.intimidate.decamin.bookride.BookRideFragment;
 import io.github.intimidate.decamin.login.LoginActivity;
+import io.github.intimidate.decamin.qrcode.QrActivity;
 import io.github.intimidate.decamin.remote.ApiManager;
 import io.github.intimidate.decamin.remote.DriverBody;
 import io.github.intimidate.decamin.remote.VerifyTokenBody;
@@ -70,11 +72,13 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
     private LatLng userLocation;
     private BookRideImpl bookRide;
     BookRideFragment bottomSheet;
+    FloatingActionButton qr;
 
     Context context=this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         int token = PreferenceManager.getDefaultSharedPreferences(this).getInt("token", -1);
         if (token != -1) {
             Call<VerifyTokenBody> call = ApiManager.api.verifyToken(token);
@@ -99,6 +103,8 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
         }
         bookRide = new BookRideImpl(this, token);
         setContentView(R.layout.activity_book_ride);
+        qr=findViewById(R.id.qr);
+
         Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -138,6 +144,14 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
             }
         });
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        qr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent a=new Intent(BookRideActivity.this,QrActivity.class);
+                startActivity(a);
+            }
+        });
 
     }
 
@@ -221,15 +235,17 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_LOCATION_REQUEST_CODE);
         }
+        if(userLocation!=null){
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bookRide.getDrivers();
+                    handler.postDelayed(this, 2000);
+                }
+            }, 2000);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                bookRide.getDrivers();
-                handler.postDelayed(this, 2000);
-            }
-        }, 2000);
+        }
 
     }
 

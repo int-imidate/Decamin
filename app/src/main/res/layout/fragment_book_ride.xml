@@ -127,7 +127,6 @@
                         android:id="@+id/carousel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="55dp"
                         android:layout_marginBottom="20dp"
                         app:items_visible="three" />
 
@@ -168,7 +167,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/password"
                         app:lottie_autoPlay="false"
-                        app:lottie_fileName="not_found.json"
+                        app:lottie_fileName="checked.json"
                         app:lottie_scale="0.5" />
                     <Button
                         android:layout_width="match_parent"
