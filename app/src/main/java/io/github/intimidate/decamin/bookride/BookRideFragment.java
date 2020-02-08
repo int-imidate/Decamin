@@ -241,12 +241,10 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         String time =Calendar.getInstance().getTime().toString();
         bookingConfirmed.playAnimation();
        // bookRideActivity.close_dialog();
-        /*Call<BookingBody> call = ApiManager.api.bookDriver(token, User.email,location.latitude,location.longitude,destination.latitude,destination.longitude,numberOfseats,time);
+        Call<BookingBody> call = ApiManager.api.bookDriver(token, User.email,location.latitude,location.longitude,destination.latitude,destination.longitude,numberOfseats);
         call.enqueue(new Callback<BookingBody>() {
             @Override
             public void onResponse(Call<BookingBody> call, Response<BookingBody> response) {
-                bookingLayout.setVisibility(View.GONE);
-                bookingConfirmed.playAnimation();
                 if(response.body().getStatus()==1){
                     bookingLayout.setVisibility(View.GONE);
                     bookingConfirmed.playAnimation();
@@ -258,6 +256,6 @@ public class BookRideFragment extends BottomSheetDialogFragment {
                 Log.d("TAGi", call.toString());
                 t.printStackTrace();
             }
-        });*/
+        });
     }
 }
