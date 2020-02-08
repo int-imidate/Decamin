@@ -192,6 +192,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
 
     private void setupFullHeight(BottomSheetDialog bottomSheetDialog) {
         FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog.findViewById(R.id.design_bottom_sheet);
+        bottomSheet.setBackground(null);
         BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
         ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
 
@@ -240,7 +241,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
     private void requestBook(){
         String time =Calendar.getInstance().getTime().toString();
         bookingConfirmed.playAnimation();
-        bookRideActivity.close_dialog();
+       // bookRideActivity.close_dialog();
         /*Call<BookingBody> call = ApiManager.api.bookDriver(token, User.email,location.latitude,location.longitude,destination.latitude,destination.longitude,numberOfseats,time);
         call.enqueue(new Callback<BookingBody>() {
             @Override
