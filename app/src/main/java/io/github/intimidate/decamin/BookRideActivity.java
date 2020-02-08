@@ -37,6 +37,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,7 +69,9 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
     private Button booknow;
     private LatLng userLocation;
     private BookRideImpl bookRide;
+    BookRideFragment bottomSheet;
 
+    Context context=this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +132,7 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
 
-                BookRideFragment bottomSheet = new BookRideFragment(userLocation, address, true, bookRide,finalDestination,token);
+                 bottomSheet = new BookRideFragment(userLocation, address, true, bookRide,finalDestination,token,BookRideActivity.this);
                 bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
             }
         });
@@ -250,6 +253,10 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
             mMap.addMarker(markerOptions.get(i));
         }
 
+
+    }
+    public void close_dialog(){
+         bottomSheet.dismiss();
 
     }
 

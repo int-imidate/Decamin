@@ -33,6 +33,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import in.goodiebag.carouselpicker.CarouselPicker;
+import io.github.intimidate.decamin.BookRideActivity;
 import io.github.intimidate.decamin.BookRideImpl;
 import io.github.intimidate.decamin.R;
 import io.github.intimidate.decamin.User;
@@ -63,8 +64,9 @@ public class BookRideFragment extends BottomSheetDialogFragment {
     LatLng location,destination;
     int numberOfseats;
     int token;
+    BookRideActivity bookRideActivity;
 
-    public BookRideFragment(LatLng location, String address, Boolean now, BookRideImpl bookRide,LatLng destination,int token) {
+    public BookRideFragment(LatLng location, String address, Boolean now, BookRideImpl bookRide,LatLng destination,int token,BookRideActivity bookRideActivity) {
         // Required empty public constructor
         this.bookRide = bookRide;
         this.address = address;
@@ -73,6 +75,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         this.location=location;
         this.destination=destination;
         this.token=token;
+        this.bookRideActivity=bookRideActivity;
     }
 
 
@@ -80,10 +83,23 @@ public class BookRideFragment extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_book_ride, container, false);
-        wheelPicker = v.findViewById(R.id.wheelpicker);
         bookingConfirmed = v.findViewById(R.id.confirmAnim);
+        View bottomSheet = v.findViewById(R.id.bottom_sheet);
+
+        final BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
+        });
         if (isBookedNow) {
-            wheelPicker.setVisibility(View.GONE);
         }
         women = v.findViewById(R.id.women);
         toggle = v.findViewById(R.id.toggleAnim);
@@ -110,7 +126,6 @@ public class BookRideFragment extends BottomSheetDialogFragment {
                     toggle.playAnimation();
                     flag = 0;
                     WomenDriver = false;
-                    setWheelPickerData();
                     //---- Your code here------
                 }
 
@@ -152,24 +167,13 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bookDriver();
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                requestBook();
             }
         });
         return v;
     }
 
-    private void setWheelPickerData() {
-        Calendar rightNow = Calendar.getInstance();
-        int hour = rightNow.get(Calendar.HOUR_OF_DAY);
-        List<Integer> data = new ArrayList<>();
-        for (int i = hour + 1; i <= hour + 7; i++) {
-            data.add(i);
-
-        }
-        wheelPicker.setData(data);
-
-
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -235,7 +239,9 @@ public class BookRideFragment extends BottomSheetDialogFragment {
     }
     private void requestBook(){
         String time =Calendar.getInstance().getTime().toString();
-        Call<BookingBody> call = ApiManager.api.bookDriver(token, User.email,location.latitude,location.longitude,destination.latitude,destination.longitude,numberOfseats,time);
+        bookingConfirmed.playAnimation();
+        bookRideActivity.close_dialog();
+        /*Call<BookingBody> call = ApiManager.api.bookDriver(token, User.email,location.latitude,location.longitude,destination.latitude,destination.longitude,numberOfseats,time);
         call.enqueue(new Callback<BookingBody>() {
             @Override
             public void onResponse(Call<BookingBody> call, Response<BookingBody> response) {
@@ -252,6 +258,6 @@ public class BookRideFragment extends BottomSheetDialogFragment {
                 Log.d("TAGi", call.toString());
                 t.printStackTrace();
             }
-        });
+        });*/
     }
 }
