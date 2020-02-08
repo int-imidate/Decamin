@@ -23,19 +23,20 @@ public class LoginActivity extends AppCompatActivity implements Login {
 
     Button login;
     LottieAnimationView loginAnim;
-    MaterialEditText email,password;
+    MaterialEditText email, password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginAnim=findViewById(R.id.loginAnim);
-        login=findViewById(R.id.login);
-        email=findViewById(R.id.email);
-        password=findViewById(R.id.password);
+        loginAnim = findViewById(R.id.loginAnim);
+        login = findViewById(R.id.login);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               doLogin("m.shyam.tnj","blee");
+                doLogin("m.shyam.tnj", "blee");
             }
         });
     }
@@ -50,18 +51,18 @@ public class LoginActivity extends AppCompatActivity implements Login {
 
         api = retrofit.create(DecaApi.class);
 
-        Call<Boolean> call = api.loginUser(email,password);
-       call.enqueue(new Callback<Boolean>() {
-           @Override
-           public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-               Log.d("fuck",response.toString());
-           }
+        Call<LoginBody> call = api.loginUser(email, password);
+        call.enqueue(new Callback<LoginBody>() {
+            @Override
+            public void onResponse(Call<LoginBody> call, Response<LoginBody> response) {
+                Log.d("fuck", response.toString());
+            }
 
-           @Override
-           public void onFailure(Call<Boolean> call, Throwable t) {
-               Log.d("fuck",call.toString());
-               t.printStackTrace();
-           }
-       });
+            @Override
+            public void onFailure(Call<LoginBody> call, Throwable t) {
+                Log.d("fuck", call.toString());
+                t.printStackTrace();
+            }
+        });
     }
 }
