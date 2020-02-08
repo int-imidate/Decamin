@@ -44,7 +44,6 @@ public interface DecaApi {
                                  @Field("from_lon") double from_lon,
                                  @Field("to_lat")double to_lat,
                                  @Field("to_lon") double to_lon,
-                                 @Field("noOfSeats") int noOfSeats,
-                                 @Field("timeStamp")String timeStamp);
+                                 @Field("noOfSeats") int noOfSeats);
 
 }
