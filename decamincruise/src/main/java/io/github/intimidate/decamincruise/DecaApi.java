@@ -1,5 +1,8 @@
 package io.github.intimidate.decamincruise;
 
+import java.util.ArrayList;
+
+import io.github.intimidate.decamincruise.remote.BookingBody;
 import io.github.intimidate.decamincruise.remote.LoginBody;
 import io.github.intimidate.decamincruise.remote.VerifyTokenBody;
 import retrofit2.Call;
@@ -30,6 +33,12 @@ public interface DecaApi {
             @Field("token") int token,
             @Field("position_lat") double latitude,
             @Field("position_lon") double longitude
+    );
+
+    @FormUrlEncoded
+    @POST("driver/getPassengers")
+    Call<ArrayList<BookingBody>> getPassengers(
+            @Field("token") int token
     );
 
 }
