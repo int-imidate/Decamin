@@ -134,6 +134,7 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
 
                  bottomSheet = new BookRideFragment(userLocation, address, true, bookRide,finalDestination,token,BookRideActivity.this);
                 bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
+
             }
         });
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
