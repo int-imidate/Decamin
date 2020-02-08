@@ -17,6 +17,15 @@ public class LoginBody {
     @SerializedName("token")
     int token;
 
+    public LoginBody(String email, String password, String gender, int due, String name, int token) {
+        this.email = email;
+        this.password = password;
+        this.gender = gender;
+        this.due = due;
+        this.name = name;
+        this.token = token;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -62,15 +71,6 @@ public class LoginBody {
     }
 
     public void setToken(int token) {
-        this.token = token;
-    }
-
-    public LoginBody(String email, String password, String gender, int due, String name, int token) {
-        this.email = email;
-        this.password = password;
-        this.gender = gender;
-        this.due = due;
-        this.name = name;
         this.token = token;
     }
 }

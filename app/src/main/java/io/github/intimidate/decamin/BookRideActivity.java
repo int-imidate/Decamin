@@ -1,11 +1,5 @@
 package io.github.intimidate.decamin;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.preference.PreferenceManager;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -16,30 +10,44 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
+
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import io.github.intimidate.decamin.bookride.BookRideFragment;
 import io.github.intimidate.decamin.login.LoginActivity;
 import io.github.intimidate.decamin.remote.ApiManager;
-import io.github.intimidate.decamin.remote.LoginBody;
+import io.github.intimidate.decamin.remote.DriverBody;
 import io.github.intimidate.decamin.remote.VerifyTokenBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,13 +55,17 @@ import retrofit2.Response;
 
 public class BookRideActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
-    private GoogleMap mMap;
     private static final int MY_LOCATION_REQUEST_CODE = 0;
-    private LocationManager locationManager;
-    AutocompleteSupportFragment autocompleteFragment;
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
+    AutocompleteSupportFragment autocompleteFragment;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    private GoogleMap mMap;
+    private LocationManager locationManager;
     private String address = "";
+    private Button booknow;
+    private LatLng userLocation;
+    private BookRideImpl bookRide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +77,20 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                 @Override
                 public void onResponse(Call<VerifyTokenBody> call, Response<VerifyTokenBody> response) {
                     Log.d("TAG", response.toString());
+                    if (response.code() == 400) {
+                        startActivity(new Intent(BookRideActivity.this, LoginActivity.class));
+                        finish();
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<VerifyTokenBody> call, Throwable t) {
                     Log.d("TAG", call.toString());
                     t.printStackTrace();
-                    startActivity(new Intent(BookRideActivity.this, LoginActivity.class));
-                    finish();
                 }
             });
         }
+        bookRide = new BookRideImpl(this, token);
         setContentView(R.layout.activity_book_ride);
         Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -105,6 +120,17 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                 }
             });
         }
+        booknow = findViewById(R.id.booknow);
+        booknow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                BookRideFragment bottomSheet = new BookRideFragment(userLocation, address, true, bookRide);
+                bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
+            }
+        });
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
     }
 
     @Override
@@ -115,6 +141,8 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setLocationTrackingEnabled();
             } else {
+                https:
+//stackoverflow.com/questions/21403496/how-to-get-current-location-in-google-map-android
                 Toast.makeText(
                         this,
                         "Permission denied. App cannot work. Please approve permissions in settings",
@@ -127,6 +155,7 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        userLocation = latLng;
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         mMap.animateCamera(cameraUpdate);
         locationManager.removeUpdates(this);
@@ -184,5 +213,39 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_LOCATION_REQUEST_CODE);
         }
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bookRide.getDrivers();
+                handler.postDelayed(this, 2000);
+            }
+        }, 2000);
+
     }
+
+    public void goToLogin() {
+        Intent a = new Intent(this, LoginActivity.class);
+        startActivity(a);
+    }
+
+    public void addDriversToMap(List<DriverBody> drivers) {
+        List<MarkerOptions> markerOptions = new ArrayList<>();
+        for (int i = 0; i < drivers.size(); i++) {
+            LatLng latLng = new LatLng(drivers.get(i).getPosition_lat(), drivers.get(i).getPosition_lon());
+            markerOptions.add(new MarkerOptions());
+            markerOptions.get(i).position(latLng);
+            markerOptions.get(i).title(drivers.get(i).getName());
+
+        }
+        mMap.clear();
+
+        for (int i = 0; i < markerOptions.size(); i++) {
+            mMap.addMarker(markerOptions.get(i));
+        }
+
+
+    }
+
 }

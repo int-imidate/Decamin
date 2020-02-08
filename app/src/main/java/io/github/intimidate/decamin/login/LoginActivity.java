@@ -1,13 +1,13 @@
 package io.github.intimidate.decamin.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.rengwuxian.materialedittext.MaterialEditText;
