@@ -2,14 +2,17 @@ package io.github.intimidate.decamin.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import io.github.intimidate.decamin.BookRideActivity;
 import io.github.intimidate.decamin.R;
 import io.github.intimidate.decamin.DecaApi;
 import io.github.intimidate.decamin.remote.LoginBody;
@@ -33,12 +36,7 @@ public class LoginActivity extends AppCompatActivity implements Login {
         login = findViewById(R.id.login);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doLogin("m.shyam.tnj", "blee");
-            }
-        });
+        login.setOnClickListener(v -> doLogin(String.valueOf(email.getText()), String.valueOf(password.getText())));
     }
 
     @Override
@@ -55,13 +53,16 @@ public class LoginActivity extends AppCompatActivity implements Login {
         call.enqueue(new Callback<LoginBody>() {
             @Override
             public void onResponse(Call<LoginBody> call, Response<LoginBody> response) {
-                Log.d("fuck", response.toString());
+                Log.d("TAG", response.toString());
+                startActivity(new Intent(LoginActivity.this, BookRideActivity.class));
+                finish();
             }
 
             @Override
             public void onFailure(Call<LoginBody> call, Throwable t) {
-                Log.d("fuck", call.toString());
+                Log.d("TAG", call.toString());
                 t.printStackTrace();
+                Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_LONG).show();
             }
         });
     }
