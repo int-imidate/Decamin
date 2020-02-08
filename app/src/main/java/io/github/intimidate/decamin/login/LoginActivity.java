@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements Login {
         User.email=PreferenceManager.getDefaultSharedPreferences(this).getString("email",null);
         User.name=PreferenceManager.getDefaultSharedPreferences(this).getString("name",null);
 
-        if ((token != -1 || User.email == null || User.name == null) && !getIntent().getBooleanExtra("stayAtLogin", true)) {
+        if ((token != -1 || User.email == null || User.name == null) && !getIntent().getBooleanExtra("stayAtLogin", false)) {
             startActivity(new Intent(LoginActivity.this, BookRideActivity.class));
             finish();
         }
