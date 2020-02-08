@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity implements Login {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int token = PreferenceManager.getDefaultSharedPreferences(this).getInt("token", -1);
-        if (token != -1 && !getIntent().getBooleanExtra("stayAtLogin", true)) {
+        if (token != -1 && !getIntent().getBooleanExtra("stayAtLogin", false)) {
             startActivity(new Intent(LoginActivity.this, DriverMapActivity.class));
             finish();
         }
