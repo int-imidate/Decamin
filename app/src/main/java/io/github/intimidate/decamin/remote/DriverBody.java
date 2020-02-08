@@ -4,23 +4,23 @@ import com.google.gson.annotations.SerializedName;
 
 public class DriverBody {
     @SerializedName("email")
-    String email;
+    private String email;
     @SerializedName("password")
-    String password;
+    private String password;
     @SerializedName("gender")
-    String gender;
+    private String gender;
     @SerializedName("name")
-    String name;
+    private String name;
     @SerializedName("currentCar")
-    int currentCar;
+    private int currentCar;
     @SerializedName("isActive")
-    int isActive;
+    private int isActive;
     @SerializedName("noOfPassengers")
-    int noOfPassengers;
+    private int noOfPassengers;
     @SerializedName("position_lat")
-    double position_lat;
+    private double position_lat;
     @SerializedName("position_lon")
-    double position_lon;
+    private double position_lon;
 
     public DriverBody(String email, String password, String gender, String name, int currentCar, int isActive, int noOfPassengers, double position_lat, double position_lon) {
         this.email = email;

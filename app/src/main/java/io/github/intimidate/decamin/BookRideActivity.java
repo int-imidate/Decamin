@@ -79,7 +79,9 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                 public void onResponse(Call<VerifyTokenBody> call, Response<VerifyTokenBody> response) {
                     Log.d("TAG", response.toString());
                     if (response.code() == 400) {
-                        startActivity(new Intent(BookRideActivity.this, LoginActivity.class));
+                        Intent intent = new Intent(BookRideActivity.this, LoginActivity.class);
+                        intent.putExtra("stayAtLogin", true);
+                        startActivity(intent);
                         finish();
                     }
                 }

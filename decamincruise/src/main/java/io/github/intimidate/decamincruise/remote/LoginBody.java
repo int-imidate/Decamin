@@ -4,18 +4,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginBody {
     @SerializedName("email")
-    String email;
+    private String email;
     @SerializedName("password")
-    String password;
+    private String password;
     @SerializedName("gender")
-    String gender;
+    private String gender;
     @SerializedName("due")
-    int due;
+    private int due;
     @SerializedName("name")
-    String name;
+    private String name;
 
     @SerializedName("token")
-    int token;
+    private int token;
 
     public String getEmail() {
         return email;

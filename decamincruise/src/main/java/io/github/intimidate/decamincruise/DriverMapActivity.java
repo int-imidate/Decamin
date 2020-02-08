@@ -23,12 +23,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import io.github.intimidate.decamincruise.login.LoginActivity;
 import io.github.intimidate.decamincruise.remote.ApiManager;
+import io.github.intimidate.decamincruise.remote.BookingBody;
+import io.github.intimidate.decamincruise.remote.BookingStatus;
 import io.github.intimidate.decamincruise.remote.VerifyTokenBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,7 +56,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 public void onResponse(Call<VerifyTokenBody> call, Response<VerifyTokenBody> response) {
                     Log.d("TAG", response.toString());
                     if (response.code() == 400) {
-                        startActivity(new Intent(DriverMapActivity.this, LoginActivity.class));
+                        Intent intent = new Intent(DriverMapActivity.this, LoginActivity.class);
+                        intent.putExtra("stayAtLogin", true);
+                        startActivity(intent);
                         finish();
                     }
                 }
@@ -136,6 +142,34 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
     }
 
+    private void getPassengersForRickshaw() {
+        Log.v("TAG", String.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getInt("token", -1)));
+        Call<ArrayList<BookingBody>> call = ApiManager.api.getPassengers(
+                PreferenceManager.getDefaultSharedPreferences(this).getInt("token", -1)
+        );
+        call.enqueue(new Callback<ArrayList<BookingBody>>() {
+            @Override
+            public void onResponse(Call<ArrayList<BookingBody>> call, Response<ArrayList<BookingBody>> response) {
+                if (response.body() != null) {
+                    for (BookingBody b : response.body()) {
+                        int status = b.getStatus();
+                        if (status == BookingStatus.booked) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(b.getFrom_lat(), b.getFrom_lon()))
+                                    .title(b.getUserEmail()));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<BookingBody>> call, Throwable t) {
+                Log.d("TAG", call.toString());
+                t.printStackTrace();
+            }
+        });
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -148,5 +182,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_LOCATION_REQUEST_CODE);
         }
+        getPassengersForRickshaw();
     }
 }

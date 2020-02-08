@@ -36,11 +36,12 @@ public class LoginActivity extends AppCompatActivity implements Login {
         int token = PreferenceManager.getDefaultSharedPreferences(this).getInt("token", -1);
         User.email=PreferenceManager.getDefaultSharedPreferences(this).getString("email",null);
         User.name=PreferenceManager.getDefaultSharedPreferences(this).getString("name",null);
-        if (token != -1||User.email==null||User.name==null) {
 
+        if ((token != -1 || User.email == null || User.name == null) && !getIntent().getBooleanExtra("stayAtLogin", true)) {
             startActivity(new Intent(LoginActivity.this, BookRideActivity.class));
             finish();
         }
+
         setContentView(R.layout.activity_login);
         loginAnim = findViewById(R.id.loginAnim);
         login = findViewById(R.id.login);
