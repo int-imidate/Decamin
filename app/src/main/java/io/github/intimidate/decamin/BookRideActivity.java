@@ -62,6 +62,7 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
     FusedLocationProviderClient fusedLocationProviderClient;
     private GoogleMap mMap;
     private LocationManager locationManager;
+    private LatLng finalDestination;
     private String address = "";
     private Button booknow;
     private LatLng userLocation;
@@ -127,7 +128,7 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
 
-                BookRideFragment bottomSheet = new BookRideFragment(userLocation, address, true, bookRide);
+                BookRideFragment bottomSheet = new BookRideFragment(userLocation, address, true, bookRide,finalDestination,token);
                 bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
             }
         });
@@ -160,7 +161,6 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
         userLocation = latLng;
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         mMap.animateCamera(cameraUpdate);
-        locationManager.removeUpdates(this);
     }
 
     @Override
@@ -201,6 +201,7 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
         mMap = googleMap;
         mMap.setOnCameraIdleListener(() -> {
             String address = getAddress(mMap.getCameraPosition().target);
+            finalDestination=mMap.getCameraPosition().target;
             if (!Objects.equals(BookRideActivity.this.address, address)) {
                 BookRideActivity.this.address = address;
                 autocompleteFragment.setText(address);
