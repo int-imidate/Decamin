@@ -55,11 +55,36 @@
         map:layout_constraintLeft_toLeftOf="parent"
         map:layout_constraintRight_toRightOf="parent"
         map:layout_constraintTop_toTopOf="parent" />
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_margin="20dp"
+    android:orientation="horizontal"
+    android:weightSum="2"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="24dp"
+    map:layout_constraintBottom_toBottomOf="parent"
+    map:layout_constraintEnd_toEndOf="parent"
+    map:layout_constraintStart_toStartOf="parent" >
     <Button
-        android:id="@+id/click"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="click me" />
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:id="@+id/booknow"
+        android:background="#00ca72"
+        android:text="Book"
+        android:textColor="#FFF"
+        />
+    <Button
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:id="@+id/booklater"
+        android:background="#00ca72"
+        android:text="Book"
+        android:textColor="#FFF"
+       /> >
+
+</LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

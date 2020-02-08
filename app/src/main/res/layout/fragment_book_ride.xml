@@ -5,116 +5,145 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".bookride.BookRideFragment">
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <ScrollView
+        android:id="@+id/bookinglayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+       <LinearLayout
+           android:orientation="vertical"
+           android:background="#000"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
+
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:weightSum="5"
-            android:orientation="vertical"
-            android:background="#000">
-
-            <LinearLayout
+            android:layout_height="wrap_content"
+            android:padding="30dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFF"
+                android:textSize="36sp"
+                android:text="To :"
+                />
+            <TextView
+                android:id="@+id/toLocation"
+                android:textColor="#FFF"
+                android:textSize="24sp"
+                android:textAlignment="viewEnd"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:padding="30dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFF"
-                    android:textSize="24sp"
-                    android:text="To :"
-                    />
-                <TextView
-                    android:id="@+id/toLocation"
-                    android:textColor="#FFF"
-                    android:textSize="24sp"
-                    android:textAlignment="viewEnd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="to location"/>
+                android:layout_height="wrap_content"
+                android:text="to location"/>
 
-            </LinearLayout>
-            <LinearLayout
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="30dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFF"
+                android:textSize="36sp"
+                android:text="From :"
+                />
+            <TextView
+                android:id="@+id/fromLocation"
+                android:textColor="#FFF"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeStepGranularity="2sp"
+                android:textAlignment="viewEnd"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:padding="30dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFF"
-                    android:textSize="24sp"
-                    android:text="From :"
-                    />
-                <TextView
-                    android:id="@+id/fromLocation"
-                    android:textColor="#FFF"
-                    android:textSize="24sp"
-                    android:textAlignment="viewEnd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="from location"/>
+                android:layout_height="wrap_content"
+                android:text="from location"/>
 
-            </LinearLayout>
-            <LinearLayout
+        </LinearLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+
+            <TextView
+                android:id="@+id/women"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Women driver?"
+                android:textAlignment="gravity"
+                android:textColor="#FFF"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/toggleAnim"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="false"
+                app:lottie_fileName="toggle_switch.json"
+                app:lottie_loop="false"
+                app:lottie_scale="0.5"
+                app:lottie_speed="3" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:text="Choose Seats"
+                android:textSize="24sp"
+                android:textColor="#FFF"
+                android:textAlignment="center"/>
 
+            <in.goodiebag.carouselpicker.CarouselPicker
+                android:id="@+id/carousel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="55dp"
+                android:layout_marginBottom="20dp"
+                app:items_visible="three" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"
-                    android:text="Women driver?"
-                    android:id="@+id/women"
-                    android:textColor="#FFF"
-                    android:textSize="24sp" />
+            <com.aigestudio.wheelpicker.WheelPicker
+                android:id="@+id/wheelpicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Button
 
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/toggleAnim"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    app:lottie_loop="false"
-                    app:lottie_speed="3"
-                    app:lottie_autoPlay="false"
-                    app:lottie_fileName="toggle_switch.json"
-                    app:lottie_scale="0.5" />
-            </LinearLayout>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Confirm Booking"
+                android:id="@+id/confirm"
+                android:textSize="24sp"
+                android:textColor="#FFF"
+                android:background="@color/buttonelement"/>
 
 
 
         </LinearLayout>
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/bottom_sheet"
-            android:layout_width="match_parent"
-            android:layout_height="355dp"
-            android:background="@android:color/holo_blue_light"
-            app:behavior_hideable="true"
-            app:behavior_peekHeight="55dp"
-            app:layout_behavior="@string/bottom_sheet_behavior">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp"
-                android:text="This is a Bottom Sheet\n\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
-Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer"
-                android:textSize="16sp" />
 
-        </androidx.core.widget.NestedScrollView>
+    </ScrollView>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/confirmAnim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/password"
+        app:lottie_autoPlay="false"
+        app:lottie_fileName="login_anim.json"
+        app:lottie_scale="0.5" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 

@@ -17,15 +17,28 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
@@ -36,6 +49,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import io.github.intimidate.decamin.bookride.BookRideFragment;
 
 import io.github.intimidate.decamin.login.LoginActivity;
 import io.github.intimidate.decamin.remote.ApiManager;
@@ -54,7 +69,8 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
     private String address = "";
-
+    private Button booknow;
+    FusedLocationProviderClient fusedLocationProviderClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +121,17 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                 }
             });
         }
+        booknow=findViewById(R.id.booknow);
+        booknow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                BookRideFragment bottomSheet = new BookRideFragment("Your location",address,true);
+                bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
+            }
+        });
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
     }
 
     @Override
@@ -114,7 +141,7 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                     Objects.equals(permissions[0], Manifest.permission.ACCESS_FINE_LOCATION) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setLocationTrackingEnabled();
-            } else {
+            } else {https://stackoverflow.com/questions/21403496/how-to-get-current-location-in-google-map-android
                 Toast.makeText(
                         this,
                         "Permission denied. App cannot work. Please approve permissions in settings",
