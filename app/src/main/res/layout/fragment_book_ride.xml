@@ -29,7 +29,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#000"
+                    android:background="#FFF"
                     android:orientation="vertical">
 
 
@@ -37,103 +37,106 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="30dp">
+                        android:padding="18dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="To :"
-                            android:textColor="#FFF"
-                            android:textSize="36sp" />
+                            android:text="Confirm your ride to :"
+                            android:textColor="#00ca72"
+                            android:textSize="28sp" />
 
                         <TextView
                             android:id="@+id/toLocation"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="to location"
-                            android:textAlignment="viewEnd"
-                            android:textColor="#FFF"
+                            android:text="To_location"
+                            android:textColor="#00ca72"
                             android:textSize="24sp" />
 
                     </LinearLayout>
 
-                    <LinearLayout
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:padding="30dp">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="From :"-->
+<!--                            android:textColor="#FFF"-->
+<!--                            android:textSize="36sp" />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/fromLocation"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:autoSizeMaxTextSize="100sp"-->
+<!--                            android:autoSizeMinTextSize="12sp"-->
+<!--                            android:autoSizeStepGranularity="2sp"-->
+<!--                            android:text="from location"-->
+<!--                            android:textAlignment="viewEnd"-->
+<!--                            android:textColor="#FFF" />-->
+
+<!--                    </LinearLayout>-->
+
+                   <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="30dp">
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="From :"
-                            android:textColor="#FFF"
-                            android:textSize="36sp" />
-
-                        <TextView
-                            android:id="@+id/fromLocation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:autoSizeMaxTextSize="100sp"
-                            android:autoSizeMinTextSize="12sp"
-                            android:autoSizeStepGranularity="2sp"
-                            android:text="from location"
-                            android:textAlignment="viewEnd"
-                            android:textColor="#FFF" />
-
-                    </LinearLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp">
-
-
-                        <TextView
+                            android:paddingLeft="33dp"
                             android:id="@+id/women"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="Women driver?"
+                            android:text="Woman driver?"
                             android:textAlignment="gravity"
-                            android:textColor="#FFF"
-                            android:textSize="24sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            android:textColor="#00ca72"
+                            android:textSize="28sp"/>
+<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                            app:layout_constraintStart_toStartOf="parent"-->
+<!--                            app:layout_constraintTop_toTopOf="parent" />-->
 
                         <com.airbnb.lottie.LottieAnimationView
                             android:id="@+id/toggleAnim"
                             android:layout_width="100dp"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="end"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_height="100dp"
                             app:lottie_autoPlay="false"
                             app:lottie_fileName="toggle_switch.json"
                             app:lottie_loop="false"
-                            app:lottie_scale="0.5"
+                            android:scaleType="fitXY"
                             app:lottie_speed="3" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--                       app:layout_constraintEnd_toEndOf="parent"-->
+<!--                       app:layout_constraintTop_toTopOf="parent"-->
+                   </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="5dp"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Choose Seats"
                         android:textAlignment="center"
-                        android:textColor="#FFF"
-                        android:textSize="24sp" />
+                        android:textColor="#00ca72"
+                        android:textSize="28sp" />
 
                     <in.goodiebag.carouselpicker.CarouselPicker
                         android:id="@+id/carousel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
                         app:items_visible="three" />
-
-
+<!--                        android:layout_marginTop="55dp"-->
+<!--                        android:layout_marginBottom="20dp"-->
+<!--                        -->
 
                 </LinearLayout>
-
 
             </ScrollView>
             <androidx.core.widget.NestedScrollView
@@ -149,7 +152,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <Button
-
                         android:text="Confirm"
                         android:textColor="#FFF"
                         android:id="@+id/confirm"
@@ -178,7 +180,7 @@
                         android:textColor="#FFF"
                         android:textSize="24sp"/>
                     <Button
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/send_alert"

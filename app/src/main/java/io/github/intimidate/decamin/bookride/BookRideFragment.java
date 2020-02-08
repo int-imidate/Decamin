@@ -101,16 +101,16 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         });
         if (isBookedNow) {
         }
-        women = v.findViewById(R.id.women);
+       // women = v.findViewById(R.id.women);
         toggle = v.findViewById(R.id.toggleAnim);
         to = v.findViewById(R.id.toLocation);
-        from = v.findViewById(R.id.fromLocation);
+//        from = v.findViewById(R.id.fromLocation);
         bookingLayout = v.findViewById(R.id.bookinglayout);
         to.setText(address);
-        from.setText(fromlocation);
+        //from.setText(fromlocation);
         float speed = 2.5f;
         CarouselPicker.CarouselViewAdapter textAdapter;
-        women.setOnClickListener(new View.OnClickListener() {
+        toggle.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
@@ -135,14 +135,13 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         carouselPicker = (CarouselPicker) v.findViewById(R.id.carousel);
         List<CarouselPicker.PickerItem> textItems = new ArrayList<>();
 //20 here represents the textSize in dp, change it to the value you want.
-        textItems.add(new CarouselPicker.TextItem("1", 24));
-        textItems.add(new CarouselPicker.TextItem("2", 24));
-        textItems.add(new CarouselPicker.TextItem("3", 24));
-        textItems.add(new CarouselPicker.TextItem("4", 24));
+        textItems.add(new CarouselPicker.TextItem("1", 18));
+        textItems.add(new CarouselPicker.TextItem("2", 18));
+        textItems.add(new CarouselPicker.TextItem("3", 18));
+        textItems.add(new CarouselPicker.TextItem("4", 18));
 
         textAdapter = new CarouselPicker.CarouselViewAdapter(getActivity(), textItems, 0);
-        textAdapter.setTextColor(Color.WHITE);
-
+        textAdapter.setTextColor(Color.rgb(0, 202, 114));
         carouselPicker.setAdapter(textAdapter);
 
         carouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -231,7 +230,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         // Calculate window height for fullscreen use
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return ((3 * displayMetrics.heightPixels) / 4);
+        return ((2* displayMetrics.heightPixels) / 4);
     }
 
     private void bookDriver() {

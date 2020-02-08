@@ -117,6 +117,10 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
         autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
+        if (autocompleteFragment == null) {
+            Log.i("TAG", "Enter pickup location");
+        }
+
         if (autocompleteFragment != null) {
             autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
