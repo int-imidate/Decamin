@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.aigestudio.wheelpicker.WheelPicker;
@@ -35,14 +36,20 @@ import java.util.List;
 import in.goodiebag.carouselpicker.CarouselPicker;
 import io.github.intimidate.decamin.BookRideActivity;
 import io.github.intimidate.decamin.BookRideImpl;
+import io.github.intimidate.decamin.CurrentBooking;
 import io.github.intimidate.decamin.R;
 import io.github.intimidate.decamin.User;
+import io.github.intimidate.decamin.login.LoginActivity;
 import io.github.intimidate.decamin.remote.ApiManager;
 import io.github.intimidate.decamin.remote.BookingBody;
 import io.github.intimidate.decamin.remote.DriverBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static io.github.intimidate.decamin.CurrentBooking.bookingStatus;
+import static io.github.intimidate.decamin.CurrentBooking.driverEmail;
+import static io.github.intimidate.decamin.CurrentBooking.noOfSeats;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -248,6 +255,20 @@ public class BookRideFragment extends BottomSheetDialogFragment {
                 if(response.body().getStatus()==1){
                     bookingLayout.setVisibility(View.GONE);
                     bookingConfirmed.playAnimation();
+                    driverEmail=response.body().getDriverEmail();
+                    noOfSeats=response.body().getNoOfSeats();
+                    bookingStatus=1;
+                    CurrentBooking.destination=address;
+                    PreferenceManager
+                            .getDefaultSharedPreferences(bookRideActivity)
+                            .edit()
+                            .putString("driverEmail", response.body().getDriverEmail())
+                            .putInt("email",response.body().getNoOfSeats())
+                            .putInt("bookingStatus",response.body().getStatus())
+                            .putString("destination",address)
+                            .apply();
+
+
                 }
             }
 

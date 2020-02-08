@@ -22,7 +22,7 @@ public class BookingBody {
     double to_lon;
 
     @SerializedName("noOfSeats")
-    double noOfSeats;
+    int noOfSeats;
 
     @SerializedName("timeStamp")
     String timeStamp;
@@ -40,7 +40,7 @@ public class BookingBody {
             double from_lon,
             double to_lat,
             double to_lon,
-            double noOfSeats,
+            int noOfSeats,
             String timeStamp,
             int status,
             double id
@@ -105,11 +105,11 @@ public class BookingBody {
         this.to_lon = to_lon;
     }
 
-    public double getNoOfSeats() {
+    public int getNoOfSeats() {
         return noOfSeats;
     }
 
-    public void setNoOfSeats(double noOfSeats) {
+    public void setNoOfSeats(int noOfSeats) {
         this.noOfSeats = noOfSeats;
     }
 
