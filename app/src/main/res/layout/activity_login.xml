@@ -18,7 +18,9 @@
         app:met_floatingLabel="highlight"
         app:met_floatingLabelAlwaysShown="true"
         app:met_floatingLabelText="Password"
+        android:maxLines="1"
         app:met_floatingLabelTextColor="#000"
+        android:inputType="textPassword"
         app:met_textColorHint="@color/colorPrimary"
         tools:layout_editor_absoluteX="-43dp" />
 
@@ -27,22 +29,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
+        android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.222"
         app:met_floatingLabel="highlight"
         app:met_floatingLabelAlwaysShown="true"
+        android:inputType="text"
         app:met_floatingLabelText="Email"
         app:met_floatingLabelTextColor="#000"
         app:met_textColorHint="@color/colorPrimary"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="30dp" />
 
     <Button
         android:id="@+id/login"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="#000"
-        android:text="Login"
+        android:background="@drawable/my_button"
+        android:text="Sing In"
         android:textColor="#FFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,8 +64,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password"
         app:lottie_autoPlay="false"
-        app:lottie_fileName="login_anim.json"
+        app:lottie_fileName="checked.json"
+        android:visibility="invisible"
         app:lottie_scale="0.5" />
 
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Hello"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>8

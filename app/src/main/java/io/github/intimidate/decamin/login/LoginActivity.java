@@ -2,6 +2,8 @@ package io.github.intimidate.decamin.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -39,7 +41,9 @@ public class LoginActivity extends AppCompatActivity implements Login {
         login = findViewById(R.id.login);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
-        login.setOnClickListener(v -> doLogin(String.valueOf(email.getText()), String.valueOf(password.getText())));
+        login.setOnClickListener(v -> {
+            doLogin(String.valueOf(email.getText()), String.valueOf(password.getText()));
+        });
     }
 
     @Override
@@ -50,6 +54,9 @@ public class LoginActivity extends AppCompatActivity implements Login {
             @Override
             public void onResponse(Call<LoginBody> call, Response<LoginBody> response) {
                 Log.d("TAG", response.toString());
+                login.setVisibility(View.GONE);
+                loginAnim.setVisibility(View.VISIBLE);
+                loginAnim.playAnimation();
                 if (response.body() != null) {
                     PreferenceManager
                             .getDefaultSharedPreferences(LoginActivity.this)
@@ -57,8 +64,10 @@ public class LoginActivity extends AppCompatActivity implements Login {
                             .putInt("token", response.body().getToken())
                             .apply();
                 }
-                startActivity(new Intent(LoginActivity.this, BookRideActivity.class));
-                finish();
+                new Handler().postDelayed(() -> {
+                    startActivity(new Intent(LoginActivity.this, BookRideActivity.class));
+                    finish();
+                }, 650);
             }
 
             @Override
