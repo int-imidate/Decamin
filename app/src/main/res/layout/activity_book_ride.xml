@@ -18,18 +18,30 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
+        map:cardBackgroundColor="@color/whiteTranslucent"
+        map:cardCornerRadius="10dp"
         map:layout_constraintTop_toTopOf="parent">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="5dp"
-            map:met_floatingLabel="highlight"
-            map:met_floatingLabelAlwaysShown="true"
-            map:met_floatingLabelText="@string/enter_pickup_location" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="-10dp"
+                android:text="@string/enter_pickup_location"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <fragment
+                android:id="@+id/autocomplete_fragment"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <ImageView
@@ -39,7 +51,6 @@
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintLeft_toLeftOf="parent"
         map:layout_constraintRight_toRightOf="parent"
-
         map:layout_constraintTop_toTopOf="parent" />
 
 
