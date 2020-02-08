@@ -8,33 +8,52 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class BookRideActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     private static final int MY_LOCATION_REQUEST_CODE = 0;
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
     private LocationManager locationManager;
+    AutocompleteSupportFragment autocompleteFragment;
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
+    private String address = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_ride);
+        Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -42,6 +61,28 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
             mapFragment.getMapAsync(this);
         }
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        if (autocompleteFragment != null) {
+            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    // TODO: Get info about the selected place.
+                    Log.i("TAG", "Name: " + place.getName() + "Place: " + place.getAddress() + ", " + (place.getLatLng() != null ? place.getLatLng().toString() : ""));
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 17);
+                    mMap.animateCamera(cameraUpdate);
+                }
+
+                @Override
+                public void onError(@NonNull Status status) {
+                    // TODO: Handle the error.
+                    Log.i("TAG", "An error occurred: " + status);
+                }
+            });
+        }
     }
 
     @Override
@@ -89,9 +130,32 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
     }
 
+    private String getAddress(LatLng position) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocation(position.latitude, position.longitude, 1);
+            return addresses.size() > 0 ? addresses.get(0).getAddressLine(0) : null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                String address = getAddress(mMap.getCameraPosition().target);
+                if (!Objects.equals(BookRideActivity.this.address, address)) {
+                    BookRideActivity.this.address = address;
+                    autocompleteFragment.setText(address);
+                }
+            }
+        });
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             setLocationTrackingEnabled();
