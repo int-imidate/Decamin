@@ -1,18 +1,11 @@
 package io.github.intimidate.decamin.bookride;
 
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,18 +16,23 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.aigestudio.wheelpicker.WheelPicker;
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import in.goodiebag.carouselpicker.CarouselPicker;
+import io.github.intimidate.decamin.BookRideImpl;
 import io.github.intimidate.decamin.R;
 
 /**
@@ -44,21 +42,23 @@ public class BookRideFragment extends BottomSheetDialogFragment {
     TextView women;
     LottieAnimationView toggle;
     int flag = 0;
-    TextView to,from;
-    String address,fromlocation;
+    TextView to, from;
+    String address, fromlocation;
     CarouselPicker carouselPicker;
-    Boolean WomenDriver=false;
+    Boolean WomenDriver = false;
     Button confirm;
-    Boolean isBookedNow=false;
+    Boolean isBookedNow = false;
     WheelPicker wheelPicker;
     LottieAnimationView bookingConfirmed;
     ScrollView bookingLayout;
+    BookRideImpl bookRide;
 
-    public BookRideFragment(String from,String address,Boolean now) {
+    public BookRideFragment(LatLng location, String address, Boolean now, BookRideImpl bookRide) {
         // Required empty public constructor
-        this.address=address;
-        this.fromlocation=from;
-        this.isBookedNow=now;
+        this.bookRide = bookRide;
+        this.address = address;
+        this.fromlocation = location.toString();
+        this.isBookedNow = now;
     }
 
 
@@ -66,16 +66,16 @@ public class BookRideFragment extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_book_ride, container, false);
-        wheelPicker=v.findViewById(R.id.wheelpicker);
-        bookingConfirmed=v.findViewById(R.id.confirmAnim);
-        if(isBookedNow){
+        wheelPicker = v.findViewById(R.id.wheelpicker);
+        bookingConfirmed = v.findViewById(R.id.confirmAnim);
+        if (isBookedNow) {
             wheelPicker.setVisibility(View.GONE);
         }
         women = v.findViewById(R.id.women);
         toggle = v.findViewById(R.id.toggleAnim);
-        to=v.findViewById(R.id.toLocation);
-        from=v.findViewById(R.id.fromLocation);
-        bookingLayout=v.findViewById(R.id.bookinglayout);
+        to = v.findViewById(R.id.toLocation);
+        from = v.findViewById(R.id.fromLocation);
+        bookingLayout = v.findViewById(R.id.bookinglayout);
         to.setText(address);
         from.setText(fromlocation);
         float speed = 2.5f;
@@ -88,14 +88,14 @@ public class BookRideFragment extends BottomSheetDialogFragment {
                     toggle.setMinAndMaxProgress(0f, 0.43f); //Here, calculation is done on the basis of start and stop frame divided by the total number of frames
                     toggle.playAnimation();
                     flag = 1;
-                    WomenDriver=true;
+                    WomenDriver = true;
 
                     //---- Your code here------
                 } else {
                     toggle.setMinAndMaxProgress(0.5f, 1f);
                     toggle.playAnimation();
                     flag = 0;
-                    WomenDriver=false;
+                    WomenDriver = false;
                     setWheelPickerData();
                     //---- Your code here------
                 }
@@ -103,7 +103,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
             }
         });
 
-       carouselPicker = (CarouselPicker) v.findViewById(R.id.carousel);
+        carouselPicker = (CarouselPicker) v.findViewById(R.id.carousel);
         List<CarouselPicker.PickerItem> textItems = new ArrayList<>();
 //20 here represents the textSize in dp, change it to the value you want.
         textItems.add(new CarouselPicker.TextItem("1", 24));
@@ -111,7 +111,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         textItems.add(new CarouselPicker.TextItem("3", 24));
         textItems.add(new CarouselPicker.TextItem("4", 24));
 
-         textAdapter = new CarouselPicker.CarouselViewAdapter(getActivity(), textItems, 0);
+        textAdapter = new CarouselPicker.CarouselViewAdapter(getActivity(), textItems, 0);
         textAdapter.setTextColor(Color.WHITE);
 
         carouselPicker.setAdapter(textAdapter);
@@ -124,7 +124,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
 
             @Override
             public void onPageSelected(int position) {
-                Log.d("carousel",String.valueOf(position));
+                Log.d("carousel", String.valueOf(position));
 
 
             }
@@ -134,7 +134,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
 
             }
         });
-        confirm=v.findViewById(R.id.confirm);
+        confirm = v.findViewById(R.id.confirm);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,11 +143,12 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         });
         return v;
     }
-    private void setWheelPickerData(){
+
+    private void setWheelPickerData() {
         Calendar rightNow = Calendar.getInstance();
         int hour = rightNow.get(Calendar.HOUR_OF_DAY);
         List<Integer> data = new ArrayList<>();
-        for(int i=hour+1;i<=hour+7;i++){
+        for (int i = hour + 1; i <= hour + 7; i++) {
             data.add(i);
 
         }
@@ -155,6 +156,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
 
 
     }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
@@ -195,13 +197,14 @@ public class BookRideFragment extends BottomSheetDialogFragment {
             }
         });
     }
-    private void collapseLayout(BottomSheetDialog bottomSheetDialog){
+
+    private void collapseLayout(BottomSheetDialog bottomSheetDialog) {
         FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog.findViewById(R.id.design_bottom_sheet);
         BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
         ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
 
 
-                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
     }
 
@@ -209,9 +212,10 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         // Calculate window height for fullscreen use
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return ((3*displayMetrics.heightPixels)/4);
+        return ((3 * displayMetrics.heightPixels) / 4);
     }
-    private void bookDriver(){
+
+    private void bookDriver() {
         bookingLayout.setVisibility(View.GONE);
         bookingConfirmed.playAnimation();
 
