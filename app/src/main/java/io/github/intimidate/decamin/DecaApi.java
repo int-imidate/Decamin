@@ -1,6 +1,7 @@
 package io.github.intimidate.decamin;
 
 import io.github.intimidate.decamin.remote.LoginBody;
+import io.github.intimidate.decamin.remote.VerifyTokenBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -15,8 +16,12 @@ public interface DecaApi {
     Call<LoginBody> loginUser(
             @Field("email") String email,
             @Field("password") String password
-
     );
 
+    @FormUrlEncoded
+    @POST("verifyToken")
+    Call<VerifyTokenBody> verifyToken(
+            @Field("token") int token
+    );
 
 }
