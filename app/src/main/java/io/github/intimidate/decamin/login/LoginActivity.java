@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,7 +38,9 @@ public class LoginActivity extends AppCompatActivity implements Login {
         login = findViewById(R.id.login);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
-        login.setOnClickListener(v -> doLogin(String.valueOf(email.getText()), String.valueOf(password.getText())));
+        login.setOnClickListener(v -> {
+            doLogin(String.valueOf(email.getText()), String.valueOf(password.getText()));
+        });
     }
 
     @Override
@@ -54,8 +58,13 @@ public class LoginActivity extends AppCompatActivity implements Login {
             @Override
             public void onResponse(Call<LoginBody> call, Response<LoginBody> response) {
                 Log.d("TAG", response.toString());
-                startActivity(new Intent(LoginActivity.this, BookRideActivity.class));
-                finish();
+                login.setVisibility(View.GONE);
+                loginAnim.setVisibility(View.VISIBLE);
+                loginAnim.playAnimation();
+                new Handler().postDelayed(() -> {
+                    startActivity(new Intent(LoginActivity.this, BookRideActivity.class));
+                    finish();
+                }, 650);
             }
 
             @Override
