@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.aigestudio.wheelpicker.WheelPicker;
+import com.airbnb.lottie.L;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -34,6 +35,13 @@ import java.util.List;
 import in.goodiebag.carouselpicker.CarouselPicker;
 import io.github.intimidate.decamin.BookRideImpl;
 import io.github.intimidate.decamin.R;
+import io.github.intimidate.decamin.User;
+import io.github.intimidate.decamin.remote.ApiManager;
+import io.github.intimidate.decamin.remote.BookingBody;
+import io.github.intimidate.decamin.remote.DriverBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,13 +60,19 @@ public class BookRideFragment extends BottomSheetDialogFragment {
     LottieAnimationView bookingConfirmed;
     ScrollView bookingLayout;
     BookRideImpl bookRide;
+    LatLng location,destination;
+    int numberOfseats;
+    int token;
 
-    public BookRideFragment(LatLng location, String address, Boolean now, BookRideImpl bookRide) {
+    public BookRideFragment(LatLng location, String address, Boolean now, BookRideImpl bookRide,LatLng destination,int token) {
         // Required empty public constructor
         this.bookRide = bookRide;
         this.address = address;
         this.fromlocation = location.toString();
         this.isBookedNow = now;
+        this.location=location;
+        this.destination=destination;
+        this.token=token;
     }
 
 
@@ -124,8 +138,8 @@ public class BookRideFragment extends BottomSheetDialogFragment {
 
             @Override
             public void onPageSelected(int position) {
-                Log.d("carousel", String.valueOf(position));
 
+                numberOfseats=position+1;
 
             }
 
@@ -216,8 +230,28 @@ public class BookRideFragment extends BottomSheetDialogFragment {
     }
 
     private void bookDriver() {
-        bookingLayout.setVisibility(View.GONE);
-        bookingConfirmed.playAnimation();
 
+
+    }
+    private void requestBook(){
+        String time =Calendar.getInstance().getTime().toString();
+        Call<BookingBody> call = ApiManager.api.bookDriver(token, User.email,location.latitude,location.longitude,destination.latitude,destination.longitude,numberOfseats,time);
+        call.enqueue(new Callback<BookingBody>() {
+            @Override
+            public void onResponse(Call<BookingBody> call, Response<BookingBody> response) {
+                bookingLayout.setVisibility(View.GONE);
+                bookingConfirmed.playAnimation();
+                if(response.body().getStatus()==1){
+                    bookingLayout.setVisibility(View.GONE);
+                    bookingConfirmed.playAnimation();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BookingBody> call, Throwable t) {
+                Log.d("TAGi", call.toString());
+                t.printStackTrace();
+            }
+        });
     }
 }
