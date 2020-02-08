@@ -50,7 +50,7 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@android:drawable/btn_star_big_on"
+        android:src="@drawable/pin_logo"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintLeft_toLeftOf="parent"
         map:layout_constraintRight_toRightOf="parent"
@@ -69,6 +69,8 @@
 
         <Button
             android:id="@+id/booknow"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -77,6 +79,8 @@
             android:textColor="#FFF" />
 
         <Button
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
             android:id="@+id/booklater"
             android:layout_width="0dp"
             android:layout_height="match_parent"
