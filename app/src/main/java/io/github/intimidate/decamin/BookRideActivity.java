@@ -30,6 +30,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
@@ -238,6 +239,7 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
         for (int i = 0; i < drivers.size(); i++) {
             LatLng latLng = new LatLng(drivers.get(i).getPosition_lat(), drivers.get(i).getPosition_lon());
             markerOptions.add(new MarkerOptions());
+            markerOptions.get(i).icon(BitmapDescriptorFactory.fromResource(R.drawable.blip));
             markerOptions.get(i).position(latLng);
             markerOptions.get(i).title(drivers.get(i).getName());
 
