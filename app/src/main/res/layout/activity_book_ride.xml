@@ -72,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#00ca72"
+            android:background="@drawable/my_button"
             android:text="Book Now"
             android:textColor="#FFF" />
 
@@ -81,7 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#00ca72"
+            android:background="@drawable/my_button"
             android:text="Book Later"
             android:textColor="#FFF" />
         >
