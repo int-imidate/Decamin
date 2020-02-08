@@ -36,6 +36,13 @@ public interface DecaApi {
     );
 
     @FormUrlEncoded
+    @POST("driver/updatePosition")
+    Call<Boolean> updateCurrentCar(
+            @Field("token") int token,
+            @Field("currentCar") String currentCar
+    );
+
+    @FormUrlEncoded
     @POST("driver/getPassengers")
     Call<ArrayList<BookingBody>> getPassengers(
             @Field("token") int token

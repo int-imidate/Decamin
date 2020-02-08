@@ -44,6 +44,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private static final float MIN_DISTANCE = 1000;
     private GoogleMap mMap;
     private LocationManager locationManager;
+    LatLng currentLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        currentLatLng = latLng;
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         mMap.animateCamera(cameraUpdate);
         Call<Boolean> call = ApiManager.api.updatePosition(
@@ -151,14 +153,28 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onResponse(Call<ArrayList<BookingBody>> call, Response<ArrayList<BookingBody>> response) {
                 if (response.body() != null) {
+                    ArrayList<LatLng> locations = new ArrayList<>();
+                    locations.add(currentLatLng);
+                    LatLng ending = new LatLng(1.0, 1.0);
+                    StringBuilder waypoints = new StringBuilder();
+
                     for (BookingBody b : response.body()) {
                         int status = b.getStatus();
                         if (status == BookingStatus.booked) {
                             mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(b.getFrom_lat(), b.getFrom_lon()))
                                     .title(b.getUserEmail()));
+                            locations.add(new LatLng(b.getFrom_lat(), b.getFrom_lon()));
+                            waypoints.append(b.getFrom_lat()).append(",").append(b.getFrom_lon()).append("|");
+                            ending = new LatLng(b.getTo_lat(), b.getTo_lon());
                         }
                     }
+
+                    waypoints.deleteCharAt(waypoints.length() - 1);
+                    String url = String.format(ApiManager.directionsAPI, currentLatLng.latitude + "," + currentLatLng.longitude,
+                            ending.latitude + "," + ending.longitude,
+                            waypoints.toString());
+
                 }
             }
 
