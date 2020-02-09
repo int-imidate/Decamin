@@ -46,7 +46,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private static final float MIN_DISTANCE = 1000;
     private GoogleMap mMap;
     private LocationManager locationManager;
-    LatLng currentLatLng;
+    LatLng currentLatLng=new LatLng(10.7599579,78.81339988);
+    int flag=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +189,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     googleMapsCall.enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
-                            Log.v("TAG", response.body() + "");
+                            Log.v("TAG2", response.body() + "");
                         }
 
                         @Override
@@ -221,13 +222,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     MY_LOCATION_REQUEST_CODE);
         }
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getPassengersForRickshaw();
-                handler.postDelayed(this, 2000);
-            }
-        }, 2000);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getPassengersForRickshaw();
+                    handler.postDelayed(this, 2000);
+                }
+            }, 2000);
+
+
     }
 }
