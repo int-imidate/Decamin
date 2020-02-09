@@ -6,9 +6,9 @@ import retrofit2.http.Query;
 
 public interface GoogleMapsApi {
 
-    String baseURL = "https://maps.googleapis.com/maps/api/directions/json/";
+    String baseURL = "https://maps.googleapis.com/maps/api/directions/";
 
-    @GET("")
+    @GET("json")
     Call<String> getDirectionsAPIResponse(@Query("origin") String origin,
                                           @Query("destination") String destination,
                                           @Query("waypoints") String waypoints,
