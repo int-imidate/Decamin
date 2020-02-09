@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -66,6 +67,8 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
     private static final float MIN_DISTANCE = 1000;
     AutocompleteSupportFragment autocompleteFragment;
     FusedLocationProviderClient fusedLocationProviderClient;
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
+
     private GoogleMap mMap;
     private LocationManager locationManager;
     private LatLng finalDestination;
@@ -77,6 +80,7 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
     BookRideFragment bottomSheet;
     public static int isBooked=0;
     int token;
+    Button sos;
     FloatingActionButton qr,profile;
 
     Context context=this;
@@ -164,6 +168,14 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                 startActivity(a);
             }
         });
+        sos=findViewById(R.id.sos);
+        sos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            sendSMSMessage();
+            }
+        });
+
 
     }
 
@@ -182,6 +194,19 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                         "Permission denied. App cannot work. Please approve permissions in settings",
                         Toast.LENGTH_LONG
                 ).show();
+            }
+        }
+        else if(requestCode==MY_PERMISSIONS_REQUEST_SEND_SMS) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage("9790468714", null, "Need help ASAP. Nearest location : "+address, null, null);
+                Toast.makeText(getApplicationContext(), "SMS sent.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "SMS faild, please try again.", Toast.LENGTH_LONG).show();
+                return;
             }
         }
     }
@@ -322,6 +347,21 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
             });
         }
 
+    }
+
+    protected void sendSMSMessage() {
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.SEND_SMS)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        MY_PERMISSIONS_REQUEST_SEND_SMS);
+            }
+        }
     }
 
 

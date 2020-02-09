@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".BookRideActivity"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="-85dp" />
+        tools:layout_editor_absoluteX="-6dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -105,6 +105,19 @@
         android:src="@drawable/qrscanner"
         map:layout_constraintRight_toRightOf="parent"
         map:layout_constraintTop_toBottomOf="@+id/profile" />
+
+    <Button
+        android:id="@+id/sos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="@color/buttonelement"
+        android:backgroundTint="@color/quantum_googred"
+        android:text="SOS"
+        android:textColor="#FFF"
+        android:textSize="24sp"
+        map:layout_constraintLeft_toLeftOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/cardView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
