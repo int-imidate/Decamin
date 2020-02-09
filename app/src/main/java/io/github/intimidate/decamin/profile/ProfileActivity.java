@@ -13,6 +13,7 @@ import com.shreyaspatil.EasyUpiPayment.EasyUpiPayment;
 import com.shreyaspatil.EasyUpiPayment.model.PaymentApp;
 
 import io.github.intimidate.decamin.R;
+import io.github.intimidate.decamin.User;
 import io.github.intimidate.decamin.qrcode.QrActivity;
 import io.github.intimidate.decamin.remote.ApiManager;
 import io.github.intimidate.decamin.remote.BookingBody;
@@ -31,7 +32,9 @@ public class ProfileActivity extends AppCompatActivity {
         TextView email,name,dues;
         Button pay;
         email=findViewById(R.id.profileemail);
+        email.setText(User.email);
         name=findViewById(R.id.profilename);
+        name.setText(User.name);
         dues=findViewById(R.id.dues);
         pay=findViewById(R.id.pay);
         final EasyUpiPayment[] easyUpiPayment = new EasyUpiPayment[1];
@@ -44,6 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onResponse(Call<LoginBody> call, Response<LoginBody> response) {
                 float d=response.body().getDue();
                 String x=String.valueOf(d);
+                dues.setText(x);
                 easyUpiPayment[0] = new EasyUpiPayment.Builder()
                         .with(ProfileActivity.this)
                         .setPayeeVpa("sidvenu@ybl")
