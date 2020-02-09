@@ -31,7 +31,7 @@ public class BookingBody {
     int status;
 
     @SerializedName("id")
-    double id;
+    int id;
 
     public BookingBody(
             String userEmail,
@@ -43,7 +43,7 @@ public class BookingBody {
             int noOfSeats,
             String timeStamp,
             int status,
-            double id
+            int id
     ) {
         this.userEmail = userEmail;
         this.driverEmail = driverEmail;
@@ -129,11 +129,11 @@ public class BookingBody {
         this.status = status;
     }
 
-    public double getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(double id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

@@ -248,7 +248,7 @@ public class BookRideFragment extends BottomSheetDialogFragment {
         String time =Calendar.getInstance().getTime().toString();
         bookingConfirmed.playAnimation();
        // bookRideActivity.close_dialog();
-        Call<BookingBody> call = ApiManager.api.bookDriver(token, User.email,location.latitude,location.longitude,destination.latitude,destination.longitude,numberOfseats);
+        Call<BookingBody> call = ApiManager.api.bookDriver(token, User.email,location.latitude,location.longitude,destination.latitude,destination.longitude,numberOfseats,0,0);
         call.enqueue(new Callback<BookingBody>() {
             @Override
             public void onResponse(Call<BookingBody> call, Response<BookingBody> response) {
@@ -263,12 +263,14 @@ public class BookRideFragment extends BottomSheetDialogFragment {
                             .getDefaultSharedPreferences(bookRideActivity)
                             .edit()
                             .putString("driverEmail", response.body().getDriverEmail())
-                            .putInt("email",response.body().getNoOfSeats())
                             .putInt("bookingStatus",response.body().getStatus())
+                            .putInt("bookingId",response.body().getId())
+
                             .putString("destination",address)
+                            .putInt("isBooked",1)
                             .apply();
-
-
+                    BookRideActivity.isBooked=1;
+                    bookRideActivity.changeBaseButtons(1);
                 }
             }
 
