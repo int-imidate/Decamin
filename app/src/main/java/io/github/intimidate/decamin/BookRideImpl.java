@@ -32,6 +32,8 @@ public class BookRideImpl {
         call.enqueue(new Callback<List<DriverBody>>() {
             @Override
             public void onResponse(Call<List<DriverBody>> call, Response<List<DriverBody>> response) {
+                Log.d("LOL",response.body().toString());
+
                 bookRideActivity.addDriversToMap(response.body());
                 drivers.clear();
                 drivers = response.body();

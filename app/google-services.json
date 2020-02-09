@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "733068508488",
+    "firebase_url": "https://decamin-992a4.firebaseio.com",
+    "project_id": "decamin-992a4",
+    "storage_bucket": "decamin-992a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733068508488:android:8a1f45181326aea1c4477d",
+        "android_client_info": {
+          "package_name": "io.github.intimidate.decamin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733068508488-vqkdr0tdktd9frjotm3v9rishvd26kor.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.intimidate.decamin",
+            "certificate_hash": "67630ce6053a6abc8107c3f93455b72662caff21"
+          }
+        },
+        {
+          "client_id": "733068508488-3174ckbhfbr6oek0her6djmt8k9a6skk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATsvzNfPIZwHPepS6o19uLXlDsLxB9Pus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733068508488-3174ckbhfbr6oek0her6djmt8k9a6skk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

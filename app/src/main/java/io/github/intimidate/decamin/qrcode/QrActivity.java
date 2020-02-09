@@ -3,6 +3,7 @@ package io.github.intimidate.decamin.qrcode;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -10,13 +11,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 
+import io.github.intimidate.decamin.BookRideActivity;
 import io.github.intimidate.decamin.R;
+import io.github.intimidate.decamin.User;
+import io.github.intimidate.decamin.remote.ApiManager;
+import io.github.intimidate.decamin.remote.BookingBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static io.github.intimidate.decamin.CurrentBooking.destination;
 
 public class QrActivity extends AppCompatActivity {
     private CodeScanner mCodeScanner;
@@ -39,7 +50,8 @@ public class QrActivity extends AppCompatActivity {
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
         mCodeScanner.setDecodeCallback(result -> QrActivity.this.runOnUiThread(
-                () -> Toast.makeText(QrActivity.this, result.getText(), Toast.LENGTH_SHORT).show())
+                () ->updateCode(result.getText()))
+
         );
         scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
         mCodeScanner.startPreview();
@@ -69,5 +81,31 @@ public class QrActivity extends AppCompatActivity {
         super.onPause();
         if(mCodeScanner != null)
             mCodeScanner.releaseResources();
+    }
+    private void updateCode(String demail){
+        int x= PreferenceManager.getDefaultSharedPreferences(this).getInt("bookingStatus",1);
+        int y=PreferenceManager.getDefaultSharedPreferences(this).getInt("bookingId",1);
+        int z=PreferenceManager.getDefaultSharedPreferences(this).getInt("token",-1);
+        if(x==1){
+            x=2;
+        }
+        else{
+            x=3;
+        }
+        Log.d("TAGQ",String.valueOf(x+y+z));
+        Call<BookingBody> call = ApiManager.api.updateBook(z,demail,x,y);
+        int finalX = x;
+        call.enqueue(new Callback<BookingBody>() {
+            @Override
+            public void onResponse(Call<BookingBody> call, Response<BookingBody> response) {
+                Log.d("TAGQ","Started ride");
+                PreferenceManager.getDefaultSharedPreferences(QrActivity.this).edit().putInt("bookingStatus", finalX).apply();
+            }
+
+            @Override
+            public void onFailure(Call<BookingBody> call, Throwable t) {
+
+            }
+        });
     }
 }

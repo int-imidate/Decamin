@@ -47,8 +47,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import io.github.intimidate.decamin.bookeddetails.BookedDetails;
 import io.github.intimidate.decamin.bookride.BookRideFragment;
 import io.github.intimidate.decamin.login.LoginActivity;
+import io.github.intimidate.decamin.profile.ProfileActivity;
 import io.github.intimidate.decamin.qrcode.QrActivity;
 import io.github.intimidate.decamin.remote.ApiManager;
 import io.github.intimidate.decamin.remote.DriverBody;
@@ -71,15 +73,19 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
     private Button booknow;
     private LatLng userLocation;
     private BookRideImpl bookRide;
+    BookedDetails bookedDetails;
     BookRideFragment bottomSheet;
-    FloatingActionButton qr;
+    public static int isBooked=0;
+    int token;
+    FloatingActionButton qr,profile;
 
     Context context=this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int token = PreferenceManager.getDefaultSharedPreferences(this).getInt("token", -1);
+         token = PreferenceManager.getDefaultSharedPreferences(this).getInt("token", -1);
+        isBooked=PreferenceManager.getDefaultSharedPreferences(this).getInt("isBooked",0);
         if (token != -1) {
             Call<VerifyTokenBody> call = ApiManager.api.verifyToken(token);
             call.enqueue(new Callback<VerifyTokenBody>() {
@@ -104,6 +110,10 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
         bookRide = new BookRideImpl(this, token);
         setContentView(R.layout.activity_book_ride);
         qr=findViewById(R.id.qr);
+        profile=findViewById(R.id.profile);
+            changeBaseButtons(isBooked);
+        bookedDetails=new BookedDetails(BookRideActivity.this);
+
 
         Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -137,22 +147,20 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
                 }
             });
         }
-        booknow = findViewById(R.id.booknow);
-        booknow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                 bottomSheet = new BookRideFragment(userLocation, address, true, bookRide,finalDestination,token,BookRideActivity.this);
-                bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
-
-            }
-        });
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         qr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent a=new Intent(BookRideActivity.this,QrActivity.class);
+                startActivity(a);
+            }
+        });
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent a=new Intent(BookRideActivity.this, ProfileActivity.class);
                 startActivity(a);
             }
         });
@@ -237,19 +245,20 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
             // Show rationale and request permission.
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_LOCATION_REQUEST_CODE);
+                    MY_LOCATION_REQUEST_CODE);Log.d("TAGQ","Started ride");
         }
-        if(userLocation!=null){
+
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     bookRide.getDrivers();
+                    Log.d("LOL","1");
                     handler.postDelayed(this, 2000);
                 }
             }, 2000);
 
-        }
+
 
     }
 
@@ -277,8 +286,43 @@ public class BookRideActivity extends FragmentActivity implements OnMapReadyCall
 
     }
     public void close_dialog(){
-         bottomSheet.dismiss();
+        if(isBooked==0){
+            bottomSheet.dismiss();
+
+        }else{
+            bookedDetails.dismiss();
+        }
 
     }
+    public void changeBaseButtons(int isBooked){
+        booknow = findViewById(R.id.booknow);
+
+        if(isBooked==1){
+            booknow.setText("Current Booking");
+            booknow.setBackgroundColor(getResources().getColor(R.color.blue));
+            booknow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bookedDetails.show(getSupportFragmentManager(),"lol");
+
+                }
+            });
+        }
+        else{
+            booknow.setText("Book now");
+            booknow.setBackgroundColor(getResources().getColor(R.color.quantum_googgreen));
+            booknow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheet = new BookRideFragment(userLocation, address, true, bookRide,finalDestination,token,BookRideActivity.this);
+
+                    bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
+
+                }
+            });
+        }
+
+    }
+
 
 }

@@ -44,6 +44,16 @@ public interface DecaApi {
                                  @Field("from_lon") double from_lon,
                                  @Field("to_lat")double to_lat,
                                  @Field("to_lon") double to_lon,
-                                 @Field("noOfSeats") int noOfSeats);
-
+                                 @Field("noOfSeats") int noOfSeats,
+                                 @Field("status") int status,
+                                 @Field("id") int id);
+    @FormUrlEncoded
+    @POST("updateBooking")
+    Call<BookingBody> updateBook(@Field("token") int token,
+                                 @Field("driverEmail")String driverEmail,
+                                 @Field("status") int status,
+                                 @Field("id") int id);
+    @FormUrlEncoded
+    @POST("user")
+    Call<LoginBody> getDues(@Field("token") int token);
 }
