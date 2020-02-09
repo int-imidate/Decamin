@@ -14,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import io.github.intimidate.decamincruise.remote.VerifyTokenBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
     private static final int MY_LOCATION_REQUEST_CODE = 0;
@@ -166,6 +168,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                     .title(b.getUserEmail()));
                             locations.add(new LatLng(b.getFrom_lat(), b.getFrom_lon()));
                             waypoints.append(b.getFrom_lat()).append(",").append(b.getFrom_lon()).append("|");
+                            waypoints.append(b.getTo_lat()).append(",").append(b.getTo_lon()).append("|");
                             ending = new LatLng(b.getTo_lat(), b.getTo_lon());
                         }
                     }
@@ -173,8 +176,27 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     waypoints.deleteCharAt(waypoints.length() - 1);
                     String url = String.format(ApiManager.directionsAPI, currentLatLng.latitude + "," + currentLatLng.longitude,
                             ending.latitude + "," + ending.longitude,
-                            waypoints.toString());
+                            waypoints.toString(),
+                            getResources().getString(R.string.google_maps_key));
+                    Log.v("TAG", url);
+                    Call<String> googleMapsCall = ApiManager.googleMapsApi
+                            .getDirectionsAPIResponse(currentLatLng.latitude + "," + currentLatLng.longitude,
+                                    ending.latitude + "," + ending.longitude,
+                                    waypoints.toString(),
+                                    getResources().getString(R.string.google_maps_key)
+                            );
+                    googleMapsCall.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            Log.v("TAG", response.body() + "");
+                        }
 
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Log.d("TAG", call.toString());
+                            t.printStackTrace();
+                        }
+                    });
                 }
             }
 
@@ -198,6 +220,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_LOCATION_REQUEST_CODE);
         }
-        getPassengersForRickshaw();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getPassengersForRickshaw();
+                handler.postDelayed(this, 2000);
+            }
+        }, 2000);
     }
 }
