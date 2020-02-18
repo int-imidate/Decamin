@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 
 public interface DecaApi {
 
-    String base_url = "http://10.1.96.113:3000/";
+    String base_url = "http://192.168.43.254:3000/";
 
     @FormUrlEncoded
     @POST("login")
