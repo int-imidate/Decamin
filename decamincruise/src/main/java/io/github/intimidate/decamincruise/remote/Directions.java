@@ -2,22 +2,21 @@ package io.github.intimidate.decamincruise.remote;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class firstlevel {
-    public ArrayList<second> getRoutes() {
+public class Directions {
+    public ArrayList<Route> getRoutes() {
         return routes;
     }
 
-    public void setRoutes(ArrayList<second> routes) {
+    public void setRoutes(ArrayList<Route> routes) {
         this.routes = routes;
     }
 
-    public firstlevel(ArrayList<second> routes) {
+    public Directions(ArrayList<Route> routes) {
         this.routes = routes;
     }
 
     @SerializedName("routes")
-    ArrayList<second> routes;
+    ArrayList<Route> routes;
 }

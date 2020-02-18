@@ -1,11 +1,5 @@
 package io.github.intimidate.decamincruise;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.preference.PreferenceManager;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +12,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +25,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
 
 import java.util.ArrayList;
@@ -35,10 +37,10 @@ import io.github.intimidate.decamincruise.remote.ApiManager;
 import io.github.intimidate.decamincruise.remote.BookingBody;
 import io.github.intimidate.decamincruise.remote.BookingStatus;
 import io.github.intimidate.decamincruise.remote.VerifyTokenBody;
+import io.github.intimidate.decamincruise.remote.Directions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
     private static final int MY_LOCATION_REQUEST_CODE = 0;
@@ -46,8 +48,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private static final float MIN_DISTANCE = 1000;
     private GoogleMap mMap;
     private LocationManager locationManager;
-    LatLng currentLatLng=new LatLng(10.7599579,78.81339988);
-    int flag=0;
+    LatLng currentLatLng = new LatLng(10.7599579, 78.81339988);
+    int flag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +149,44 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
     }
 
+    private ArrayList<LatLng> decodePoly(String encoded) {
+
+        Log.i("Location", "String received: "+encoded);
+        ArrayList<LatLng> poly = new ArrayList<LatLng>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            //LatLng p = new LatLng((int) (((double) lat /1E5)* 1E6), (int) (((double) lng/1E5   * 1E6)));
+            LatLng p = new LatLng((((double) lat / 1E5)),(((double) lng / 1E5)));
+            poly.add(p);
+        }
+
+        for(int i=0;i<poly.size();i++){
+            Log.i("Location", "Point sent: Latitude: "+poly.get(i).latitude+" Longitude: "+poly.get(i).longitude);
+        }
+        return poly;
+    }
+
     private void getPassengersForRickshaw() {
         Log.v("TAG", String.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getInt("token", -1)));
         Call<ArrayList<BookingBody>> call = ApiManager.api.getPassengers(
@@ -180,20 +220,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             waypoints.toString(),
                             getResources().getString(R.string.google_maps_key));
                     Log.v("TAG", url);
-                    Call<String> googleMapsCall = ApiManager.googleMapsApi
+                    Call<Directions> googleMapsCall = ApiManager.googleMapsApi
                             .getDirectionsAPIResponse(currentLatLng.latitude + "," + currentLatLng.longitude,
                                     ending.latitude + "," + ending.longitude,
                                     waypoints.toString(),
                                     getResources().getString(R.string.google_maps_key)
                             );
-                    googleMapsCall.enqueue(new Callback<String>() {
+                    googleMapsCall.enqueue(new Callback<Directions>() {
                         @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            Log.v("TAG2", response.body() + "");
+                        public void onResponse(Call<Directions> call, Response<Directions> response) {
+                             mMap.addPolyline(new PolylineOptions()
+                                    .addAll(decodePoly(response.body().getRoutes().get(0).getOverviewPolyline().getEncodedPolyline())));
                         }
 
                         @Override
-                        public void onFailure(Call<String> call, Throwable t) {
+                        public void onFailure(Call<Directions> call, Throwable t) {
                             Log.d("TAG", call.toString());
                             t.printStackTrace();
                         }
@@ -222,14 +263,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     MY_LOCATION_REQUEST_CODE);
         }
 
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getPassengersForRickshaw();
-                    handler.postDelayed(this, 2000);
-                }
-            }, 2000);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getPassengersForRickshaw();
+                handler.postDelayed(this, 2000);
+            }
+        }, 2000);
 
 
     }
